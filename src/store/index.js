@@ -36,7 +36,13 @@ export default createStore({
   },
 
   actions: {
-    async changeTaskStatus ({ commit }, { id, status }) {
+    async changeTaskStatus ({ commit, getters }, { id, status }) {
+      const task = getters.listTask.find(t => t.id === id)
+      await axios.put(
+        `https://vue-with-https-default-rtdb.firebaseio.com/tasks/${id}.json`,
+        { name: task.name, dateCreate: task.dateCreate, text: task.text, status }
+      )
+
       await commit('setChangeTaskStatus', { id, status })
     },
 
